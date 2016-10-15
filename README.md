@@ -8,6 +8,6 @@ A starter repository for a web application built with Spring and React
 cf push spring-react-starter -p build/libs/spring-react-starter.war
 
 # Verify:
-curl <URL> => <html><body>HELLO WORLD!</body></html>
-curl <URL>/greeting => "{"id":666,"content":"Hello, World!"}"
+curl <URL> => <html><body>HELLO WORLD!</body></html> \n
+curl <URL>/greeting => "{"id":666,"content":"Hello, World!"}" \n
 curl <URL>/greeting?name=Bananaman => "{"id":666,"content":"Hello, Bananaman!"}"
