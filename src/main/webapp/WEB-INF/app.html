@@ -1,5 +1,158 @@
+<!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="utf-8">
+        <title>Spring React Starter</title>
+        <script src="https://unpkg.com/react@15.3.0/dist/react.js"></script>
+        <script src="https://unpkg.com/react-dom@15.3.0/dist/react-dom.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+        <script src="https://unpkg.com/jquery@3.1.0/dist/jquery.min.js"></script>
+        <script src="https://unpkg.com/remarkable@1.7.1/dist/remarkable.min.js"></script>
+    </head>
     <body>
-        HELLO WORLD!
+        <div id="content"></div>
+        <script type="text/babel">
+            var Rolodex = React.createClass({
+                loadContactsFromServer: function() {
+                    $.ajax({
+                        url: this.props.url,
+                        dataType: 'json',
+                        cache: false,
+                        success: function(data) {
+                            this.setState({data: data})
+                        }.bind(this),
+                        error: function(xhr, status, err) {
+                            console.error(this.props.url, status, err.toString());
+                        }.bind(this)
+                    });
+                },
+
+                handleContactSubmit: function(contact) {
+                    var contacts = this.state.data;
+                    contact.id = Date.now();
+                    var newContacts = contacts.concat([contact]);
+                    this.setState({data: newContacts});
+
+                    $.ajax({
+                        url: this.props.url,
+                        dataType: 'json',
+                        type: 'POST',
+                        data: contact,
+                        success: function(data) {
+                            this.setState({data: data});
+                        }.bind(this),
+                        error: function(xhr, status, err) {
+                            console.error(this.props.url, status, err.toString());
+                        }.bind(this)
+                    });
+                },
+
+                getInitialState: function() {
+                    return {data: []};
+                },
+
+                componentDidMount: function() {
+                    this.loadContactsFromServer();
+                    setInterval(this.loadContactsFromServer, this.props.pollInterval);
+                },
+
+                render: function() {
+                    return (
+                            <div className="rolodex">
+                                <h1>Contacts</h1>
+                                <ContactList data={this.state.data}/>
+                                <ContactForm onCommentSubmit={this.handleContactSubmit} />
+                            </div>
+                    );
+                }
+            });
+
+            var ContactList = React.createClass({
+                render: function() {
+                    var contactNodes = this.props.data.map(function (contact) {
+                        return (
+                                <Contact name={contact.name} key={contact.id}>
+                                    {contact.phoneNumber}
+                                </Contact>
+                        )
+                    });
+                    return (
+                            <div className="contactList">
+                                {contactNodes}
+                            </div>
+                    );
+                }
+            });
+
+            var ContactForm = React.createClass({
+                getInitialState: function() {
+                    return {name: '', phoneNumber: ''};
+                },
+
+                handleContactNameChange: function(event) {
+                    this.setState({name: event.target.value});
+                },
+
+                handleContactPhoneNumberChange: function(event) {
+                    this.setState({phoneNumber: event.target.value});
+                },
+
+                handleSubmit: function(event) {
+                    event.preventDefault();
+                    var name = this.state.name.trim();
+                    var phoneNumber = this.state.phoneNumber.trim();
+                    if (!phoneNumber || !name) {
+                        return;
+                    }
+
+                    this.setState({name: '', phoneNumber: ''});
+                    this.props.onCommentSubmit({name: name, phoneNumber: phoneNumber});
+                },
+
+                render: function () {
+                    return (
+                            <form className="contactForm" onSubmit={this.handleSubmit}>
+                                <input
+                                        type="text"
+                                        placeholder="Contact Name"
+                                        value={this.state.name}
+                                        onChange={this.handleContactNameChange}
+                                />
+                                <input
+                                        type="text"
+                                        placeholder="202-555-1212"
+                                        value={this.state.phoneNumber}
+                                        onChange={this.handleContactPhoneNumberChange}
+                                />
+                                <input type="submit" value="Post"/>
+                            </form>
+                    );
+                }
+            });
+
+            var Contact = React.createClass({
+                rawMarkup: function() {
+                    var md = new Remarkable();
+                    var rawMarkup = md.render(this.props.children.toString());
+                    return {__html: rawMarkup};
+                },
+
+                render: function () {
+                    return (
+                            <div className="contact">
+                                <h2 className="commentAuthor">
+                                    {this.props.name}
+                                </h2>
+                                <span dangerouslySetInnerHTML={this.rawMarkup()} />
+                            </div>
+                    )
+                }
+            });
+
+            ReactDOM.render(
+                    <Rolodex url="/contacts" pollInterval={20000} />,
+                    document.getElementById('content')
+            );
+        </script>
     </body>
 </html>
