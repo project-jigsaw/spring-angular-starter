@@ -36,8 +36,9 @@
                     $.ajax({
                         url: this.props.url,
                         dataType: 'json',
+                        contentType: 'application/json',
                         type: 'POST',
-                        data: contact,
+                        data: JSON.stringify(contact),
                         success: function(data) {
                             this.setState({data: data});
                         }.bind(this),

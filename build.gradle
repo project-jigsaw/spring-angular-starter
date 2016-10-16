@@ -23,9 +23,11 @@ repositories {
 	mavenCentral()
 }
 
-
 dependencies {
+	compile('org.postgresql:postgresql:9.4-1206-jdbc42')
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile("org.flywaydb:flyway-core:4.0.3")
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('com.google.code.gson:gson:1.7.2')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('com.google.code.gson:gson:1.7.2')
 }
