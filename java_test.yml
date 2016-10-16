@@ -13,3 +13,5 @@ inputs:
 run:
   path: repo/gradlew
   args: ["build"]
+params:
+  TERM: xterm
