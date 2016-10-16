@@ -1,0 +1,12 @@
+resources:
+  - name: repo
+    type: git
+    source:
+      uri: git@github.com:mikeymc/spring-react-starter.git
+      branch: master
+jobs:
+- name: java
+  plan:
+  - get: repo
+  - task: test
+    file: java_test.yml
