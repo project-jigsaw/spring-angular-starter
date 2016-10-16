@@ -9,4 +9,7 @@ inputs:
 - name: repo
 
 run:
-  path: env
+  path: repo/gradlew
+  args: ["build"]
+params:
+  JAVA_HOME: /opt/java/jdk1.8.0_45/
