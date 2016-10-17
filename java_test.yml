@@ -13,6 +13,6 @@ inputs:
 
 run:
   path: repo/gradlew
-  args: ["tasks --all"]
+  args: ["tasks", "--all"]
 params:
   TERM: xterm
