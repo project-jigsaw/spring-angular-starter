@@ -11,7 +11,7 @@ inputs:
 - name: repo
 run:
   path: "repo/gradlew"
-  args: ["--build-file", "repo/build.gradle", "assemble"]
+  args: ["--build-file", "repo/build.gradle", "test"]
 params:
   TERM: -dumb
   GRADLE_OPTS: -Dorg.gradle.native=false
