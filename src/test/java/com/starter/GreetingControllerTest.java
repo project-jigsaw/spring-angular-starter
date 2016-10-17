@@ -26,7 +26,7 @@ public class GreetingControllerTest {
     public void testExampleDefault() throws Exception {
         this.mockMvc.perform(get("/greeting").accept(MediaType.ALL))
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":666,\"content\":\"Hello, World!\"}"));
+                .andExpect(content().string("{\"id\":667,\"content\":\"Hello, World!\"}"));
     }
 
     @Test
