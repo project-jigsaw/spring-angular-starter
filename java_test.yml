@@ -7,12 +7,11 @@ image_resource:
     repository: openjdk
     build: 8-jdk/alpine
     tag: latest
-
 inputs:
 - name: repo
-
 run:
-  path: repo/gradlew
-  args: ["init", "tasks", "--all"]
+  path: "repo/gradlew"
+  args: ["--build-file", "source-code/build.gradle", "assemble"]
 params:
-  TERM: xterm
+  TERM: -dumb
+  GRADLE_OPTS: -Dorg.gradle.native=false
